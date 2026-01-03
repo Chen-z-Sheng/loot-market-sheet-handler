@@ -5,7 +5,7 @@ import sys
 
 # ========== 【核心配置区】 ==========
 CONFIG = {
-    "source_file": "小鸭日更临时表.xlsx",
+    "source_file": "美妆戴森电玩行情日更临时表.xlsx",
     "target_suffix": "_已处理",
     "regex_rules": [
         # 特殊场景优先（避免被通用规则覆盖）
