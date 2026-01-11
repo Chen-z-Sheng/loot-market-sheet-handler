@@ -72,6 +72,11 @@ CONFIG = {
             "desc": "数字 + 崩|旧款|新款|新版|老版|滋润|轻盈等"
         },
         {
+            "pattern": r"^(?P<number>\d+)\s*[PX]+$",
+            "num_groups": ["number"],
+            "desc": "数字 + PX"
+        },
+        {
             "pattern": r"^(?P<number>\d+)\s*([一二三四五六七八九十]{1,2})代\s*(\s*[-/]\s*\d+年)?$",
             "num_groups": ["number"],
             "desc": "数字 + 中文数字代 + 可选年份（如400九代-24年）"
