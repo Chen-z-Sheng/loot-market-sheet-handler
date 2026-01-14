@@ -56,20 +56,20 @@ CONFIG = {
             "desc": "数字 + -/ + 23/24/25 + 可选上/下（如653/24下、402-24上、123/25）"
         },
         {
-            "pattern": r"^(?P<number>\d+)(浓|淡)?\s*-\s*\d+\s*ml$",
+            "pattern": r"^(?P<number>\d+)(浓|淡)?\s*-\s*\d+\s*ml[\u4e00-\u9fa5]*$",
             "num_groups": ["number"],
-            "desc": "数字 + 浓/淡 + - + 数字ml（如530-150ml、260淡-50ml）",
+            "desc": "数字 + ml + 可选后缀（如515-75ml清爽）",
             "flags": re.IGNORECASE
         },
         {
-            "pattern": r"^(?P<number1>\d+)?\s*/\s*(?P<number2>\d*)$",
+            "pattern": r"^/*(?P<number1>\d+)?\s*/\s*(?P<number2>\d*)/*$",
             "num_groups": ["number1", "number2"],
-            "desc": "数字/数字 | 数字/ | /数字（如550/740、104/、/740、92 / 102）"
+            "desc": "斜杠分隔数字，兼容首尾斜杠（如/415/）"
         },
         {
-            "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+$",
+            "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+(\d+ml|g)?$",
             "num_groups": ["number"],
-            "desc": "数字 + 崩|旧款|新款|新版|老版|滋润|轻盈等"
+            "desc": "数字 + 中文描述 + 可选规格（如295清莹露230ml）"
         },
         {
             "pattern": r"^(?P<number>\d+)\s*([一二三四五六七八九十]{1,2})代\s*(\s*[-/]\s*\d+年)?$",
