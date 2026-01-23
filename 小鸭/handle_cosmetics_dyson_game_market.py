@@ -1,7 +1,8 @@
-import pandas as pd
 import os
 import re
 import sys
+
+import pandas as pd
 
 # ========== 【核心配置区】 ==========
 CONFIG = {
@@ -41,9 +42,9 @@ CONFIG = {
             "desc": "短日期（如2025-12-24）"
         },
         {
-            "pattern": r"^(?P<number>\d+)\s*/\s*(中文|英文|暂停)$",
+            "pattern": r"^(?P<number>\d+)\s*(-|/)\s*(中文|英文|暂停|国版)$",
             "num_groups": ["number"],
-            "desc": "数字 + / + 中文|英文（如177/中文）"
+            "desc": "数字 + -|/ + 中文|英文|暂停|国版（如177/中文、209-国版）"
         },
         {
             "pattern": r"^(?P<number>\d+)\s*(-|/)\s*(23|24|25)\s*年(浓|淡)?$",
