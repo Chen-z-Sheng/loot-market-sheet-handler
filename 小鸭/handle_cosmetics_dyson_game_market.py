@@ -88,6 +88,12 @@ CONFIG = {
             "desc": "中文数字代 + 可选数字ml + 可选新 + 数字（如三代100ml482）",
             "flags": re.IGNORECASE
         },
+        # 数字 + - + 中文（如695-光子）
+        {
+            "pattern": r"^(?P<number>\d+)\s*-\s*[\u4e00-\u9fa5]+$",
+            "num_groups": ["number"],
+            "desc": "数字 + - + 中文（如695-光子）"
+        },
     ],
     "adjust_config": {
         "rate_value": 0.99,  # 数字调整乘数（修改此处调整乘值）
