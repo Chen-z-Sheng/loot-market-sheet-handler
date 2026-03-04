@@ -9,6 +9,12 @@ CONFIG = {
     "source_file": "美妆戴森电玩行情日更临时表.xlsx",
     "target_suffix": "_已处理",
     "regex_rules": [
+        # 新增：带括号的数字（优先处理）
+        {
+            "pattern": r"^\s*\((?P<number>\d+)\)\s*$",
+            "num_groups": ["number"],
+            "desc": "带括号的数字（如（400）、（1234））"
+        },
         # 固反+数字（优先处理，唯一标识用于特殊逻辑）
         {
             "pattern": r"^固反\s*(?P<number>\d+)$",
@@ -94,6 +100,12 @@ CONFIG = {
             "num_groups": ["number"],
             "desc": "数字 + - + 中文（如695-光子）"
         },
+        # 新增：兜底规则 - 纯中文+常见标点（避免无匹配标error）
+        {
+            "pattern": r"^[\u4e00-\u9fa5，。！？、；：“”‘’（）【】《》·\s]+$",
+            "num_groups": [],
+            "desc": "纯中文+常见标点（如崩，没卖、无货等）"
+        }
     ],
     "adjust_config": {
         "rate_value": 0.99,  # 数字调整乘数（修改此处调整乘值）
@@ -119,7 +131,8 @@ def is_pure_number(s):
 def is_pure_chinese(s):
     try:
         s_str = str(s).strip()
-        return re.fullmatch(r'[\u4e00-\u9fa5]+', s_str) is not None
+        # 修改：允许包含常见中文标点（逗号、句号、感叹号、问号、顿号等）
+        return re.fullmatch(r'^[\u4e00-\u9fa5，。！？、；：“”‘’（）【】《》·\s]+$', s_str) is not None
     except:
         return False
 
@@ -172,7 +185,7 @@ def process_single_line(line_str, cell_pos, line_num, diff_cache=None):
     if line_stripped == "":
         return line_str, None, 0
 
-    # 纯数字/纯中文直接处理
+    # 纯数字/纯中文（含标点）直接处理
     if is_pure_number(line_stripped):
         new_num, _ = adjust_number(line_stripped)
         return new_num if new_num else line_str, None, 0
