@@ -9,11 +9,11 @@ CONFIG = {
     "source_file": "美妆戴森电玩行情日更临时表.xlsx",
     "target_suffix": "_已处理",
     "regex_rules": [
-        # 新增：带括号的数字（优先处理）
+        # 兼容全角/半角括号的数字（优先处理）
         {
-            "pattern": r"^\s*\((?P<number>\d+)\)\s*$",
+            "pattern": r"^\s*[（(](?P<number>\d+)[）)]\s*$",
             "num_groups": ["number"],
-            "desc": "带括号的数字（如（400）、（1234））"
+            "desc": "带括号的数字（兼容全角/半角括号，如（400）、(1234)）"
         },
         # 固反+数字（优先处理，唯一标识用于特殊逻辑）
         {
@@ -100,7 +100,7 @@ CONFIG = {
             "num_groups": ["number"],
             "desc": "数字 + - + 中文（如695-光子）"
         },
-        # 新增：兜底规则 - 纯中文+常见标点（避免无匹配标error）
+        # 兜底规则 - 纯中文+常见标点（避免无匹配标error）
         {
             "pattern": r"^[\u4e00-\u9fa5，。！？、；：“”‘’（）【】《》·\s]+$",
             "num_groups": [],
@@ -131,8 +131,8 @@ def is_pure_number(s):
 def is_pure_chinese(s):
     try:
         s_str = str(s).strip()
-        # 修改：允许包含常见中文标点（逗号、句号、感叹号、问号、顿号等）
-        return re.fullmatch(r'^[\u4e00-\u9fa5，。！？、；：“”‘’（）【】《》·\s]+$', s_str) is not None
+        # 允许包含常见中文标点（逗号、句号、感叹号、问号、顿号等）+ 全角/半角括号
+        return re.fullmatch(r'^[\u4e00-\u9fa5，。！？、；：“”‘’（）【】《》·\s()]+$', s_str) is not None
     except:
         return False
 
@@ -167,7 +167,10 @@ def adjust_number(num_str):
 
 def safe_replace_number(original_str, num_str, new_num):
     """安全替换数字，避免子集数字误替换（如1234中的123）"""
-    pattern = rf'(?<!\d){re.escape(num_str)}(?!\d)'
+    pattern = rf'(?<=[（(]){re.escape(num_str)}(?=[）)])'
+    # 如果匹配不到括号内的数字，再用原规则匹配独立数字
+    if not re.search(pattern, original_str):
+        pattern = rf'(?<!\d){re.escape(num_str)}(?!\d)'
     return re.sub(pattern, new_num, original_str, count=1)
 
 
@@ -181,6 +184,7 @@ def process_single_line(line_str, cell_pos, line_num, diff_cache=None):
     :param diff_cache: 缓存固反行差值（格式：{'diff': 差值}）
     :return: 处理后内容、错误信息、固反差值
     """
+    # 修复：先去除首尾空白，再处理（避免换行/空格导致匹配失败）
     line_stripped = line_str.strip()
     if line_stripped == "":
         return line_str, None, 0
