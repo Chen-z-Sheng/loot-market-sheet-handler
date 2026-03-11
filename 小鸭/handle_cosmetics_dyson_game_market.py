@@ -84,6 +84,12 @@ CONFIG = {
             "desc": "数字 + 中文描述 + 可选规格（如295清莹露230ml）"
         },
         {
+            "pattern": r"^[\u4e00-\u9fa5]+\s*(?P<number>\d+)\s*m(l)?|g\s*$",
+            "num_groups": ["number"],
+            "desc": "中文开头 + 数字 + ml/g（如护手霜100ml、面霜50g）",
+            "flags": re.IGNORECASE
+        },
+        {
             "pattern": r"^(?P<number>\d+)\s*[PX]+$",
             "num_groups": ["number"],
             "desc": "数字 + PX"
