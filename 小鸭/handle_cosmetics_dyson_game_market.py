@@ -27,6 +27,18 @@ CONFIG = {
             "num_groups": ["number1", "number2"],
             "desc": "数字+加号+数字（如787+50）"
         },
+        # 匹配 数字+中文+可选年份（如1510免税25年、1545国柜）
+        {
+            "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+\s*(23|24|25)?\s*年?$",
+            "num_groups": ["number"],
+            "desc": "数字+中文+可选年份（如1510免税25年、1545国柜）"
+        },
+        # 匹配 中文代+数字+-/年份（如三代508-25年、九代502-24年）
+        {
+            "pattern": r"^([一二三四五六七八九十]{1,2})代\s*(?P<number>\d+)\s*(-|/)\s*(23|24|25)\s*年?$",
+            "num_groups": ["number"],
+            "desc": "中文代+数字+-/年份（如三代508-25年、九代502-24年）"
+        },
         {
             "pattern": r"^兜底(?P<number>\d+)$",
             "num_groups": ["number"],
@@ -80,9 +92,9 @@ CONFIG = {
             "flags": re.IGNORECASE
         },
         {
-            "pattern": r"^/*(?P<number1>\d+)?\s*/\s*(?P<number2>\d*)/*$",
-            "num_groups": ["number1", "number2"],
-            "desc": "斜杠分隔数字，兼容首尾斜杠（如/415/）"
+            "pattern": r"^/*\s*(?P<number1>\d+)?\s*(?:/\s*(?P<number2>\d+)?\s*)+(?:/\s*(?P<number3>\d+)?)?\s*/*$",
+            "num_groups": ["number1", "number2", "number3"],
+            "desc": "斜杠分隔数字（支持1-3个数字、连续斜杠、空格，如/415/、335/325/365、335//365）"
         },
         {
             "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+(\d+ml|g)?$",
