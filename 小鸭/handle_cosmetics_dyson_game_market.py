@@ -135,6 +135,12 @@ CONFIG = {
             "num_groups": ["number"],
             "desc": "数字 + - + 字母数字组合（如180-1C1）"
         },
+        {
+            "pattern": r"^(?P<number>\d+)(-[A-Za-z]+|[A-Za-z]+)-\d+$",
+            "num_groups": ["number"],
+            "desc": "数字+字母+-数字 或 数字+-字母+-数字（如185PO-01、155-P-01）",
+            "flags": re.IGNORECASE
+        },
         # 兜底规则 - 纯中文+常见标点（避免无匹配标error）
         {
             "pattern": r"^[\u4e00-\u9fa5，。！？、；：“”‘’（）【】《》·\s]+$",
