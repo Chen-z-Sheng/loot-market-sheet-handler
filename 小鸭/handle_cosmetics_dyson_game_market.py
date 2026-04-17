@@ -64,6 +64,18 @@ CONFIG = {
             "num_groups": [],
             "desc": "短日期（如2025-12-24）"
         },
+        # 匹配 数字/数字+英文/中文（如180/183英文、182/183中文）
+        {
+            "pattern": r"^(?P<number>\d+)/\d+\s*(英文|中文)$",
+            "num_groups": ["number"],
+            "desc": "数字/数字+英文/中文（如180/183英文、182/183中文）"
+        },
+        # 匹配 数字/任意中文（如58/新版、60/老版）
+        {
+            "pattern": r"^(?P<number>\d+)\s*/\s*[\u4e00-\u9fa5]+$",
+            "num_groups": ["number"],
+            "desc": "数字/任意中文（如58/新版）"
+        },
         {
             "pattern": r"^(?P<number>\d+)\s*(-|/)\s*(中文|英文|暂停|国版)$",
             "num_groups": ["number"],
@@ -100,6 +112,12 @@ CONFIG = {
             "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+(\d+ml|g)?$",
             "num_groups": ["number"],
             "desc": "数字 + 中文描述 + 可选规格（如295清莹露230ml）"
+        },
+        # 匹配 中文+数字（如临期1370、现货888、缺货520）
+        {
+            "pattern": r"^[\u4e00-\u9fa5]+\s*(?P<number>\d+)$",
+            "num_groups": ["number"],
+            "desc": "中文+数字（如临期1370、现货888）"
         },
         {
             "pattern": r"^[\u4e00-\u9fa5]+\s*(?P<number>\d+)\s*m(l)?|g\s*$",
