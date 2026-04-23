@@ -27,6 +27,16 @@ CONFIG = {
             "num_groups": ["number1", "number2"],
             "desc": "数字+加号+数字（如787+50）"
         },
+        {
+            "pattern": r"^[\u4e00-\u9fa5]+\s*(?P<number>\d+)\s*[\u4e00-\u9fa5]+$",
+            "num_groups": ["number"],
+            "desc": "中文+数字+中文（如崩270有标）"
+        },
+        {
+            "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+$",
+            "num_groups": ["number"],
+            "desc": "数字+中文（如285无标、295新版七代）"
+        },
         # 匹配 数字+中文+可选年份（如1510免税25年、1545国柜）
         {
             "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+\s*(23|24|25)?\s*年?$",
@@ -48,6 +58,11 @@ CONFIG = {
             "pattern": r"^(?P<number>\d+)\s*(-|/)\s*(1W0|1W2)$",
             "num_groups": ["number"],
             "desc": "数字 + -|/ + 1W0|1W2"
+        },
+        {
+            "pattern": r"^(1W0|1W2)\s*(-|/)\s*(?P<number>\d+)$",
+            "num_groups": ["number"],
+            "desc": "1W0/1W2 + -|/ + 数字（如1W0-185、1W2/200）"
         },
         {
             "pattern": r"^(?P<number>\d+)\s*[\u4e00-\u9fa5]+\s*\d+$",
